@@ -839,6 +839,26 @@ select {
 	line-height: 1.65;
 }
 
+.cases-carousel {
+	position: relative;
+}
+
+.cases-viewport {
+	overflow: hidden;
+	padding: 0 0 28px;
+}
+
+.cases-track {
+	display: flex;
+	will-change: transform;
+	transition: transform .8s cubic-bezier(.22, 1, .36, 1);
+}
+
+.cases-slide {
+	flex: 0 0 100%;
+	min-width: 100%;
+}
+
 .case-card {
 	padding: 44px 48px;
 	border-left: 4px solid var(--jam-pink);
@@ -890,6 +910,34 @@ select {
 .quote-mark {
 	font-size: 28px;
 	line-height: 0;
+}
+
+.cases-dots {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+}
+
+.cases-dot {
+	width: 9px;
+	height: 9px;
+	border: 0;
+	border-radius: 999px;
+	background: rgba(10, 10, 10, .22);
+	cursor: pointer;
+	transition: width .25s ease, background .25s ease, transform .25s ease;
+}
+
+.cases-dot:hover,
+.cases-dot:focus-visible {
+	background: rgba(255, 0, 96, .65);
+	outline: none;
+	transform: scale(1.15);
+}
+
+.cases-dot.is-active {
+	width: 28px;
+	background: var(--jam-pink);
 }
 
 .contact-watermark {
@@ -1217,50 +1265,122 @@ textarea.form-control {
 @media (max-width: 767px) {
 	.md-hidden { display: block; }
 	.case-card { padding: 32px 24px; }
-	.contact-form { padding: 28px 22px; }
+	.contact-form { padding: 22px 20px; }
 	.methodology-knot { width: 220px; height: 220px; }
 	.jam-process {
-		min-height: 0;
+		min-height: 300px;
+		margin-top: 0;
+	}
+
+	.jam-process-lines {
+		display: block !important;
+		inset: 8px -10px 0;
+		height: 285px;
+		opacity: .55;
 	}
 
 	.jam-process-grid {
-		min-height: 0;
-		grid-template-columns: 1fr;
-		gap: 3.25rem;
+		min-height: 300px;
+		grid-template-columns: minmax(66px, 1fr) clamp(128px, 42vw, 150px) minmax(66px, 1fr);
+		gap: 4px;
+		align-items: center;
 	}
 
 	.jam-process-stage,
 	.jam-process-stage-left,
 	.jam-process-stage-right {
 		justify-self: center;
-		max-width: 300px;
+		width: 100%;
+		max-width: 88px;
+		padding-top: 0;
 	}
 
 	.jam-process-core {
-		order: -1;
-		width: min(300px, 82vw);
-		height: min(300px, 82vw);
+		order: 0;
+		width: clamp(128px, 42vw, 150px);
+		height: clamp(128px, 42vw, 150px);
+		padding: 22px 14px 30px;
 	}
 
 	.jam-process-core::before,
 	.jam-process-core::after {
+		display: block;
+		width: 28px;
+		height: 28px;
+		border-width: 5px;
+	}
+
+	.jam-process-core::before {
+		left: -16px;
+	}
+
+	.jam-process-core::after {
+		right: -16px;
+	}
+
+	.jam-process-icon {
+		width: 46px;
+		height: 46px;
+	}
+
+	.jam-process-icon svg,
+	.jam-process-core-icon svg {
+		width: 25px;
+		height: 25px;
+	}
+
+	.jam-process-number {
+		margin-top: .45rem;
+		font-size: clamp(30px, 9vw, 38px);
+	}
+
+	.jam-process-rule {
+		width: 46px;
+		height: 1.5px;
+		margin-top: .45rem;
+	}
+
+	.jam-process-title {
+		margin-top: .45rem;
+		font-size: 1rem;
+		font-weight: 800;
+		line-height: .96;
+	}
+
+	.jam-process-copy {
+		display: none;
+	}
+
+	.jam-process-core-number {
+		font-size: clamp(32px, 10vw, 40px);
+	}
+
+	.jam-process-core-title {
+		margin-top: .45rem;
+		font-size: 1rem;
+		font-weight: 800;
+		line-height: .9;
+	}
+
+	.jam-process-core-copy {
 		display: none;
 	}
 
 	.jam-process-core-icon {
-		width: 72px;
-		height: 72px;
-		bottom: -38px;
+		width: 46px;
+		height: 46px;
+		bottom: -25px;
 	}
 
 	.jam-method-summary {
-		padding: 28px 24px;
-		border-radius: 28px;
+		margin-top: 0;
+		padding: 18px 16px;
+		border-radius: 24px;
 	}
 
 	.jam-method-summary-grid {
-		grid-template-columns: 1fr;
-		gap: 1.75rem;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: .75rem;
 	}
 
 	.jam-method-summary-col:first-child .jam-method-summary-title::after,
@@ -1269,9 +1389,238 @@ textarea.form-control {
 	}
 
 	.jam-method-summary-center {
-		text-align: left;
+		text-align: center;
+	}
+
+	.jam-method-summary-title {
+		font-size: clamp(12px, 3.6vw, 15px);
+		text-shadow: none;
+	}
+
+	.jam-method-summary-list {
+		margin-top: .45rem;
+		font-size: clamp(8px, 2.45vw, 10px);
+		line-height: 1.25;
+	}
+
+	.jam-method-summary-list li {
+		padding-left: 9px;
+	}
+
+	.jam-method-summary-list li::before {
+		width: 4px;
+		height: 4px;
+	}
+
+	.jam-method-summary-focus {
+		margin-top: .55rem;
+		font-size: clamp(10px, 3vw, 13px);
+		text-shadow: none;
 	}
 
 	.hero-watermark,
 	.contact-watermark { opacity: .75; }
+
+	#hero.min-h-screen {
+		min-height: 70vh;
+	}
+	.hero-title {
+		font-size: 2.5rem;
+		margin-bottom: 0rem;	
+	}
+	#hero .grid-hero{
+		gap: 1rem;
+	}
+	.hero-watermark {
+        right: -2px;
+        bottom: 5px;
+        font-size: 130px;
+        color: rgba(255, 255, 255, 14%);
+	}
+	.gallery-card {
+		width: 200px;
+		height: 300px;
+	}
+	.problem-section, .methodology-section, .services-section, .cases-section, .contact-section{
+		padding-top: 2rem;
+		padding-bottom: 2rem;
+	}
+
+	#contacto .gap-12 {
+		gap: 1rem;
+	}
+
+	.jam-form-fields {
+		gap: .85rem;
+	}
+
+	.jam-form-fields .gap-5 {
+		gap: .85rem;
+	}
+
+	.form-control {
+		padding: .62rem .9rem;
+		font-size: 14px;
+		min-height: 44px;
+	}
+
+	.jam-terms {
+		font-size: 12px;
+		line-height: 1.35;
+	}
+
+	.contact-form button[type="submit"] {
+		margin-top: .2rem;
+		padding-top: .85rem;
+		padding-bottom: .85rem;
+		font-size: 13px;
+	}
+
+	.contact-form .text-center.text-13 {
+		font-size: 12px;
+		line-height: 1.35;
+	}
+
+	.cases-copy {
+		font-size: 13px;
+		line-height: 1.45;
+	}
+
+	.cases-carousel {
+		margin-top: 1.5rem;
+	}
+
+	.cases-viewport {
+		padding-bottom: 14px;
+	}
+
+	.case-card {
+		padding: 22px 18px;
+	}
+
+	.case-watermark {
+		top: -2.3rem;
+		right: -2.4rem;
+		font-size: 140px;
+	}
+
+	.case-title {
+		margin-top: .75rem;
+		font-size: clamp(22px, 7vw, 28px);
+	}
+
+	.case-title + p {
+		margin-top: .55rem;
+		font-size: 11px;
+	}
+
+	.case-card .mt-8 {
+		margin-top: 1.1rem;
+		gap: 1.15rem;
+	}
+
+	.case-card .mt-3 {
+		margin-top: .5rem;
+	}
+
+	.case-card .text-15 {
+		font-size: 12px;
+		line-height: 1.45;
+	}
+
+	.case-card .text-11 {
+		font-size: 9px;
+	}
+
+	.case-card .w-6 {
+		width: 1rem;
+	}
+
+	.case-card .mt-10 {
+		margin-top: 1.35rem;
+	}
+
+	.metric-cell {
+		padding: 12px 10px;
+	}
+
+	.metric-value {
+		font-size: 24px;
+	}
+
+	.metric-cell .mt-2 {
+		margin-top: .35rem;
+	}
+
+	.case-quote {
+		width: 90%;
+		margin: 1.35rem auto 0;
+		padding: 16px 18px;
+		font-size: 13px;
+		line-height: 1.25;
+	}
+
+	.quote-mark {
+		font-size: 20px;
+	}
+
+	.cases-dots {
+		gap: 9px;
+	}
+
+	.cases-dot {
+		width: 8px;
+		height: 8px;
+	}
+
+	.cases-dot.is-active {
+		width: 22px;
+	}
+
+	.cases-carousel + .text-center {
+		margin-top: 1.5rem;
+	}
+
+	.cases-carousel + .text-center a {
+		padding: .8rem 1.15rem;
+		font-size: 12px;
+	}
+
+	.services-section .md-grid-cols-2 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.service-card {
+		padding: 18px 14px;
+		min-height: 220px;
+	}
+
+	.service-number {
+		font-size: 10px;
+	}
+
+	.service-title {
+		font-size: clamp(14px, 4vw, 17px);
+		line-height: 1.05;
+	}
+
+	.service-desc {
+		font-size: clamp(10px, 2.9vw, 12px);
+		line-height: 1.45;
+	}
+
+	footer .footer-copy,
+	footer .footer-links a,
+	footer .font-body.text-14 {
+		font-size: 16px;
+		line-height: 1.65;
+	}
+
+	footer .font-display.text-13 {
+		font-size: 16px;
+	}
+
+	footer .footer-legal {
+		font-size: 13px;
+	}
 }
